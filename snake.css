@@ -1,7 +1,15 @@
 h1 {
   text-align: center;
 }
-
+#scoreBoard {
+  width: 800px;
+  margin: 0 auto;
+  font-family: sans-serif;
+}
+#scoreCard {
+  color: white;
+  text-shadow: 2px 1px 3px orangered;
+}
 #grid {
   width: 800px;
   display: flex;
@@ -17,10 +25,12 @@ h1 {
 
 .snake {
   background-color: black;
+  border-radius: 7px;
 }
 
 .ghost {
   background-color: gray;
+  border-radius: 2px;
 }
 
 .food {
