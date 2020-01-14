@@ -10,7 +10,7 @@ class Snake {
     this.direction = direction;
     this.type = type;
     this.previousTail = [0, 0];
-    this.eatenFood = [];
+    this.eatenFood = new Food([0, 0], 0);
   }
 
   getState() {
@@ -37,7 +37,7 @@ class Snake {
     const [snakeHeadX, snakeHeadY] = this.location[this.location.length - 1];
     const [foodX, foodY] = food.location;
     if (snakeHeadX == foodX && snakeHeadY == foodY) {
-      this.eatenFood.push(food);
+      this.eatenFood = food;
       this.grow();
       return true;
     }

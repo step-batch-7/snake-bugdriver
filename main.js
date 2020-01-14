@@ -38,12 +38,11 @@ const renderSnake = function(snake) {
   eraseTail(snake);
   drawSnake(snake);
 };
+
 const eraseEatenFood = function(eatenFood) {
-  eatenFood.forEach(food => {
-    const [colId, rowId] = food.location;
-    const cell = getCell(colId, rowId);
-    cell.classList.remove('food');
-  });
+  const [colId, rowId] = eatenFood.location;
+  const cell = getCell(colId, rowId);
+  cell.classList.remove('food');
 };
 
 const drawScoreBoard = function(score) {
