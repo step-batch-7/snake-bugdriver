@@ -8,6 +8,10 @@ class Direction {
     this.deltas[SOUTH] = [0, 1];
   }
 
+  changeDirection(newDirection) {
+    this.heading = newDirection;
+  }
+
   get delta() {
     return this.deltas[this.heading];
   }

@@ -31,16 +31,22 @@ class Snake {
     return this.#positions.slice();
   }
 
+  get head() {
+    return this.location[this.location.length - 1];
+  }
+
   get species() {
     return this.#type;
   }
 
   grow(type) {
-    type == 'specialFood' || this.#positions.unshift(this.#previousTail);
+    type == 'specialFood' ||
+      this.#type == 'ghost' ||
+      this.#positions.unshift(this.#previousTail);
   }
 
   eat(food) {
-    const [snakeHeadX, snakeHeadY] = this.location[this.location.length - 1];
+    const [snakeHeadX, snakeHeadY] = this.head;
     const foodState = food.getState();
     const [foodX, foodY] = foodState.position;
     if (snakeHeadX == foodX && snakeHeadY == foodY) {
@@ -49,6 +55,10 @@ class Snake {
       return true;
     }
     return false;
+  }
+
+  changeDirection(newDirection) {
+    this.#direction.changeDirection(newDirection);
   }
 
   turnLeft() {
@@ -60,7 +70,7 @@ class Snake {
   }
 
   move() {
-    const [headX, headY] = this.#positions[this.#positions.length - 1];
+    const [headX, headY] = this.head;
     this.#previousTail = this.#positions.shift();
 
     const [deltaX, deltaY] = this.#direction.delta;
@@ -69,7 +79,7 @@ class Snake {
   }
 
   hasTouchBody(snake) {
-    const snakeHead = this.#positions[this.#positions.length - 1];
+    const snakeHead = this.head;
     const snakeStatus = snake.getState();
     const snakeBody = snakeStatus.location.slice(0, -1);
     return snakeBody.some(bodyPart => areCellsEqual(bodyPart, snakeHead));
@@ -77,7 +87,7 @@ class Snake {
 
   hasTouch(gridSize) {
     const { noOfCols, noOfRows } = gridSize;
-    const [headX, headY] = this.#positions[this.#positions.length - 1];
+    const [headX, headY] = this.head;
     const hasTouchVerticalWalls = headX < 0 || headX > noOfCols;
     const hasTouchHorizontalWalls = headY < 0 || headY > noOfRows;
     return hasTouchHorizontalWalls || hasTouchVerticalWalls;

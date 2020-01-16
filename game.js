@@ -5,6 +5,14 @@ class Game {
   #score;
   #gridSize;
 
+  constructor(snake, ghostSnake, food, gridSize) {
+    this.#snake = snake;
+    this.#ghostSnake = ghostSnake;
+    this.#food = food;
+    this.#score = new Score();
+    this.#gridSize = gridSize;
+  }
+
   static create(snakeConfig, ghostSnakeConfig, foodConfig, gridBoundry) {
     const snakeDirection = new Direction(snakeConfig.initDirection);
     const snake = new Snake(snakeConfig.position, snakeDirection, 'snake');
@@ -18,13 +26,6 @@ class Game {
     return new Game(snake, ghostSnake, food, gridBoundry);
   }
 
-  constructor(snake, ghostSnake, food, gridSize) {
-    this.#snake = snake;
-    this.#ghostSnake = ghostSnake;
-    this.#food = food;
-    this.#score = new Score();
-    this.#gridSize = gridSize;
-  }
   getState() {
     const state = {};
     state.snake = this.#snake.getState();
@@ -33,15 +34,34 @@ class Game {
     state.score = this.#score.announce();
     return state;
   }
+
+  generateNewFood() {
+    let foodX = Math.floor(Math.random() * this.#gridSize.noOfCols);
+    let foodY = Math.floor(Math.random() * this.#gridSize.noOfRows);
+
+    const [snakeX, snakeY] = this.#snake.head;
+    const [ghostSnakeX, ghostSnakeY] = this.#ghostSnake.head;
+
+    let diffX = Math.abs(snakeX - foodX) > Math.abs(ghostSnakeX - foodX);
+    let diffY = Math.abs(snakeY - foodY) > Math.abs(ghostSnakeY - foodY);
+
+    while (diffX || diffY) {
+      foodX = Math.floor(Math.random() * this.#gridSize.noOfCols);
+      foodY = Math.floor(Math.random() * this.#gridSize.noOfRows);
+      diffX = Math.abs(snakeX - foodX) > Math.abs(ghostSnakeX - foodX);
+      diffY = Math.abs(snakeY - foodY) > Math.abs(ghostSnakeY - foodY);
+    }
+    const newFoodType = Math.random() < 0.3 ? 'specialFood' : 'food';
+    this.#food = new Food([foodX, foodY], newFoodType);
+  }
+
   update() {
     if (this.#snake.eat(this.#food)) {
       this.#score.update(this.#food.point);
-      const newFoodPosition = [
-        Math.floor(Math.random() * this.#gridSize.noOfCols),
-        Math.floor(Math.random() * this.#gridSize.noOfRows),
-      ];
-      const newFoodType = Math.random() < 0.3 ? 'specialFood' : 'food';
-      this.#food = new Food(newFoodPosition, newFoodType);
+      this.generateNewFood();
+    }
+    if (this.#ghostSnake.eat(this.#food)) {
+      this.generateNewFood();
     }
     this.#snake.move();
     this.#ghostSnake.move();
@@ -49,11 +69,17 @@ class Game {
 
   navigateGhostSnake() {
     setInterval(() => {
-      let x = Math.random() * 100;
-      if (x > 1) {
-        this.#ghostSnake.turnLeft();
-      }
-    }, 500);
+      const { position } = this.#food.getState();
+      const [foodX, foodY] = position;
+      const { location } = this.#ghostSnake.getState();
+      const [snakeX, snakeY] = location[location.length - 1];
+      const diffX = snakeX - foodX;
+      const diffY = snakeY - foodY;
+      diffY < 0 && this.#ghostSnake.changeDirection(SOUTH);
+      diffY > 0 && this.#ghostSnake.changeDirection(NORTH);
+      diffX < 0 && this.#ghostSnake.changeDirection(EAST);
+      diffX > 0 && this.#ghostSnake.changeDirection(WEST);
+    }, 100);
   }
 
   turnSnake(turnDirection) {

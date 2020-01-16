@@ -66,6 +66,7 @@ const drawGame = function(game) {
   renderSnake(snake);
   renderSnake(ghostSnake);
   eraseEatenFood(snake.eatenFood);
+  eraseEatenFood(ghostSnake.eatenFood);
   drawFood(food);
   drawScoreBoard(score);
 };
