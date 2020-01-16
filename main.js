@@ -80,22 +80,33 @@ const attachEventListeners = game => {
   document.body.onkeydown = () => handleKeyPress(event, game);
 };
 
-const initSnake = gridSize => {
-  const snakePositions = [
+const getSnakeInitConfig = function() {
+  const config = {};
+  config.position = [
     [40, 25],
     [41, 25],
     [42, 25],
   ];
-  return new Snake(snakePositions, new Direction(EAST), 'snake');
+  config.initDirection = EAST;
+  return config;
 };
 
-const initGhostSnake = gridSize => {
-  const ghostSnakePositions = [
+const getGhostSnakeInitConfig = function() {
+  const config = {};
+  config.position = [
     [40, 30],
     [41, 30],
     [42, 30],
   ];
-  return new Snake(ghostSnakePositions, new Direction(SOUTH), 'ghost');
+  config.initDirection = SOUTH;
+  return config;
+};
+
+const getFoodInitConfig = function() {
+  const config = {};
+  config.position = [50, 25];
+  config.type = 'food';
+  return config;
 };
 
 const startGame = function(game) {
@@ -107,22 +118,22 @@ const startGame = function(game) {
     game.update();
     drawGame(game);
   }, 100);
+  game.navigateGhostSnake();
 };
 
 const main = function() {
-  const gridSize = { noOfCols: 100, noOfRows: 60 };
-  const snake = initSnake();
-  const ghostSnake = initGhostSnake();
-  const food = new Food([50, 25], 'food');
-  createGrids(gridSize);
-  const game = new Game(snake, ghostSnake, food, gridSize);
+  const snakeInitConfig = getSnakeInitConfig();
+  const ghostSnakeInitConfig = getGhostSnakeInitConfig();
+  const foodInitConfig = getFoodInitConfig();
+  const gridBoundry = { noOfCols: 100, noOfRows: 60 };
+  const game = Game.create(
+    snakeInitConfig,
+    ghostSnakeInitConfig,
+    foodInitConfig,
+    gridBoundry
+  );
+  createGrids(gridBoundry);
   drawGame(game);
   attachEventListeners(game);
   startGame(game);
-  setInterval(() => {
-    let x = Math.random() * 100;
-    if (x > 1) {
-      ghostSnake.turnLeft();
-    }
-  }, 500);
 };
