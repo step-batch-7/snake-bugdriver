@@ -21,6 +21,7 @@ class Snake {
       eatenFood: this.eatenFood,
     };
   }
+
   get location() {
     return this.positions.slice();
   }
@@ -61,9 +62,9 @@ class Snake {
     this.positions.push([headX + deltaX, headY + deltaY]);
   }
 
-  hasTouchItself() {
+  hasTouchOther(snake) {
     const snakeHead = this.positions[this.positions.length - 1];
-    const snakeBody = this.positions.slice(0, -1);
+    const snakeBody = snake.positions.slice(0, -1);
     return snakeBody.some(bodyPart => areCellsEqual(bodyPart, snakeHead));
   }
 

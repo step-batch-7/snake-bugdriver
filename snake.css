@@ -35,4 +35,35 @@ h1 {
 
 .food {
   background-color: red;
+  animation-name: animateFood;
+  animation-duration: 0.4s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  border-radius: 7px;
+}
+
+.specialFood {
+  background-color: blueviolet;
+  animation-name: animateSpecialFood;
+  animation-duration: 0.4s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  border-radius: 7px;
+}
+
+@keyframes animateFood {
+  from {
+    box-shadow: 0px 0px 0px 0px red;
+  }
+  to {
+    box-shadow: 0px 0px 3px 3px red;
+  }
+}
+@keyframes animateSpecialFood {
+  from {
+    box-shadow: 0px 0px 0px 0px blueviolet;
+  }
+  to {
+    box-shadow: 0px 0px 3px 3px blueviolet;
+  }
 }

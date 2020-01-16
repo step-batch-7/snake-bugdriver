@@ -10,9 +10,7 @@ class Game {
     const state = {};
     state.snake = this.snake.getState();
     state.ghostSnake = this.ghostSnake.getState();
-    state.food = {
-      location: this.food.location,
-    };
+    state.food = this.food.getState();
     state.score = this.score.announce();
     return state;
   }
@@ -23,7 +21,8 @@ class Game {
         Math.floor(Math.random() * this.gridSize.noOfCols),
         Math.floor(Math.random() * this.gridSize.noOfRows),
       ];
-      this.food = new Food(newFoodPosition, Math.ceil(Math.random() * 5));
+      const newFoodType = Math.random() < 0.2 ? 'specialFood' : 'food';
+      this.food = new Food(newFoodPosition, newFoodType);
     }
     this.snake.move();
     this.ghostSnake.move();
@@ -36,6 +35,10 @@ class Game {
     turners[turnDirection]();
   }
   isOver() {
-    return this.snake.hasTouchItself() || this.snake.hasTouch(this.gridSize);
+    return (
+      this.snake.hasTouchOther(this.snake) ||
+      this.snake.hasTouch(this.gridSize) ||
+      this.snake.hasTouchOther(this.ghostSnake)
+    );
   }
 }
