@@ -2,7 +2,7 @@ h1 {
   text-align: center;
 }
 #scoreBoard {
-  width: 800px;
+  width: 1000px;
   margin: 0 auto;
   font-family: sans-serif;
 }
@@ -11,7 +11,7 @@ h1 {
   text-shadow: 2px 1px 3px orangered;
 }
 #grid {
-  width: 800px;
+  width: 1000px;
   display: flex;
   margin: 0 auto;
   flex-wrap: wrap;
@@ -19,8 +19,8 @@ h1 {
 }
 
 .cell {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 .snake {
